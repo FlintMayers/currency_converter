@@ -10,15 +10,13 @@ class CommissionerTest extends TestCase
 {
     public function testConverterInstance(): void
     {
-        $converter = new Converter();
-        $commissioner = new Commissioner($converter);
+        $commissioner = new Commissioner();
         $this->assertInstanceOf(Commissioner::class, $commissioner);
     }
 
     public function testCalculateCommissions(): void
     {
-        $converter = new Converter();
-        $commissioner = new Commissioner($converter);
+        $commissioner = new Commissioner();
 
         $this->assertEquals(
             0.60,
@@ -177,8 +175,7 @@ class CommissionerTest extends TestCase
 
     public function testMaximumCommissions()
     {
-        $converter = new Converter();
-        $commissioner = new Commissioner($converter);
+        $commissioner = new Commissioner();
 
         $this->assertEquals(
             5.00,

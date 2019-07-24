@@ -2,6 +2,7 @@
 
 namespace Acme;
 
+use Acme\Utils\CurrencyConverter;
 use DateTime;
 
 class Commissioner
@@ -12,21 +13,7 @@ class Commissioner
     /**
      * @var array
      */
-    private $customers;
-
-    /**
-     * @var Converter
-     */
-    private $converter;
-
-    /**
-     * @param Converter $converter
-     */
-    public function __construct(Converter $converter)
-    {
-        $this->customers = [];
-        $this->converter = $converter;
-    }
+    private $customers = [];
 
     /**
      * @param string $date
@@ -46,11 +33,11 @@ class Commissioner
         float $amount,
         string $currency
     ): float {
-        $amount = $this->converter->toEUR($amount, $currency);
+        $amount = CurrencyConverter::toEUR($amount, $currency);
 
         if ($customerType === 'legal') {
             $commissions = self::CASH_OUT_COMMISSIONS / 100 * $amount;
-            $convertedCommissions = $this->converter->toOriginalCurrency($commissions, $currency);
+            $convertedCommissions = CurrencyConverter::toOriginalCurrency($commissions, $currency);
             $minimumCommissions = max($convertedCommissions, 0.50);
 
             return min($minimumCommissions, 5);
@@ -58,7 +45,7 @@ class Commissioner
 
         if ($operationType === 'cash_in') {
             $commissions = self::CASH_IN_COMMISSIONS / 100 * $amount;
-            $convertedCommissions = $this->converter->toOriginalCurrency($commissions, $currency);
+            $convertedCommissions = CurrencyConverter::toOriginalCurrency($commissions, $currency);
 
             return min($convertedCommissions, 5);
         }
@@ -82,6 +69,6 @@ class Commissioner
         $this->customers[$customerId]['freeAmount'] = max($freeAmount - $amount, 0);
         $commissions = self::CASH_OUT_COMMISSIONS / 100 * $commissionableAmount;
 
-        return $this->converter->toOriginalCurrency($commissions, $currency);
+        return CurrencyConverter::toOriginalCurrency($commissions, $currency);
     }
 }
