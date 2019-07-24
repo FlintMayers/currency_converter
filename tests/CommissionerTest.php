@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests;
+
 use Acme\Commissioner;
 use Acme\Converter;
 use PHPUnit\Framework\TestCase;
@@ -17,6 +19,7 @@ class CommissionerTest extends TestCase
     {
         $converter = new Converter();
         $commissioner = new Commissioner($converter);
+
         $this->assertEquals(
             0.60,
             $commissioner->calculate(
@@ -39,6 +42,7 @@ class CommissionerTest extends TestCase
                 'EUR'
             )
         );
+
         $this->assertEquals(
             0,
             $commissioner->calculate(
@@ -50,6 +54,7 @@ class CommissionerTest extends TestCase
                 'EUR'
             )
         );
+
         $this->assertEquals(
             0.06,
             $commissioner->calculate(
@@ -97,6 +102,7 @@ class CommissionerTest extends TestCase
                 'EUR'
             )
         );
+
         $this->assertEquals(
             0.30,
             $commissioner->calculate(
