@@ -4,6 +4,9 @@ namespace Acme;
 
 use League\Csv\Reader;
 
+/**
+ * Class CSVParser
+ */
 class CSVParser
 {
     /**
@@ -13,6 +16,7 @@ class CSVParser
 
     /**
      * CSVParser constructor.
+     *
      * @param Commissioner $commissioner
      */
     public function __construct(Commissioner $commissioner)
@@ -21,7 +25,7 @@ class CSVParser
     }
 
     /**
-     * @param string $path
+     * @param  string $path
      * @return array
      */
     public function parse(string $path): array

@@ -2,6 +2,9 @@
 
 Namespace Acme\Utils;
 
+/**
+ * Class CurrencyConverter
+ */
 class CurrencyConverter
 {
     /**

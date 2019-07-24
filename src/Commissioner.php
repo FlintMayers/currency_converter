@@ -5,6 +5,9 @@ namespace Acme;
 use Acme\Utils\CurrencyConverter;
 use DateTime;
 
+/**
+ * Class Commissioner
+ */
 class Commissioner
 {
     const CASH_OUT_COMMISSIONS = 0.3;

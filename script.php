@@ -3,11 +3,9 @@
 require 'vendor/autoload.php';
 
 use Acme\Commissioner;
-use Acme\Converter;
 use Acme\CSVParser;
 
-$converter = new Converter();
-$commissioner = new Commissioner($converter);
+$commissioner = new Commissioner();
 $importer = new CSVParser($commissioner);
 $allCommissions = $importer->parse('../' . $argv[1]);
 

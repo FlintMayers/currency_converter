@@ -2,6 +2,9 @@
 
 namespace Acme;
 
+/**
+ * Class Converter
+ */
 class Converter
 {
     /**
