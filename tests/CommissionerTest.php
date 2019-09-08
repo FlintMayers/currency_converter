@@ -3,7 +3,6 @@
 namespace Tests;
 
 use Acme\Commissioner;
-use Acme\Converter;
 use PHPUnit\Framework\TestCase;
 
 class CommissionerTest extends TestCase
@@ -14,44 +13,9 @@ class CommissionerTest extends TestCase
         $this->assertInstanceOf(Commissioner::class, $commissioner);
     }
 
-    public function testCalculateCommissions(): void
+    public function testGivenOutputsForCustomerNo1(): void
     {
         $commissioner = new Commissioner();
-
-        $this->assertEquals(
-            0.60,
-            $commissioner->calculate(
-                '2014-12-31',
-                4,
-                'natural',
-                'cash_out',
-                1200,
-                'EUR'
-            )
-        );
-        $this->assertEquals(
-            3,
-            $commissioner->calculate(
-                '2015-01-01',
-                4,
-                'natural',
-                'cash_out',
-                1000,
-                'EUR'
-            )
-        );
-
-        $this->assertEquals(
-            0,
-            $commissioner->calculate(
-                '2016-01-05',
-                4,
-                'natural',
-                'cash_out',
-                1000,
-                'EUR'
-            )
-        );
 
         $this->assertEquals(
             0.06,
@@ -61,18 +25,6 @@ class CommissionerTest extends TestCase
                 'natural',
                 'cash_in',
                 200,
-                'EUR'
-            )
-        );
-
-        $this->assertEquals(
-            0.90,
-            $commissioner->calculate(
-                '2016-01-06',
-                2,
-                'legal',
-                'cash_out',
-                300,
                 'EUR'
             )
         );
@@ -125,30 +77,6 @@ class CommissionerTest extends TestCase
         );
 
         $this->assertEquals(
-            5.00,
-            $commissioner->calculate(
-                '2016-01-10',
-                2,
-                'legal',
-                'cash_in',
-                1000000.00,
-                'EUR'
-            )
-        );
-
-        $this->assertEquals(
-            0.00,
-            $commissioner->calculate(
-                '2016-01-10',
-                3,
-                'natural',
-                'cash_out',
-                1000.00,
-                'EUR'
-            )
-        );
-
-        $this->assertEquals(
             0.00,
             $commissioner->calculate(
                 '2016-02-15',
@@ -156,6 +84,35 @@ class CommissionerTest extends TestCase
                 'natural',
                 'cash_out',
                 300.00,
+                'EUR'
+            )
+        );
+    }
+
+    public function testGivenOutputsForCustomerNo2(): void
+    {
+        $commissioner = new Commissioner();
+
+        $this->assertEquals(
+            0.90,
+            $commissioner->calculate(
+                '2016-01-06',
+                2,
+                'legal',
+                'cash_out',
+                300,
+                'EUR'
+            )
+        );
+
+        $this->assertEquals(
+            5.00,
+            $commissioner->calculate(
+                '2016-01-10',
+                2,
+                'legal',
+                'cash_in',
+                1000000.00,
                 'EUR'
             )
         );
@@ -173,7 +130,64 @@ class CommissionerTest extends TestCase
         );
     }
 
-    public function testMaximumCommissions()
+    public function testGivenOutputsForCustomerNo3(): void
+    {
+        $commissioner = new Commissioner();
+
+        $this->assertEquals(
+            0.00,
+            $commissioner->calculate(
+                '2016-01-10',
+                3,
+                'natural',
+                'cash_out',
+                1000.00,
+                'EUR'
+            )
+        );
+    }
+
+    public function testGivenOutputsForCustomerNo4(): void
+    {
+        $commissioner = new Commissioner();
+
+        $this->assertEquals(
+            0.60,
+            $commissioner->calculate(
+                '2014-12-31',
+                4,
+                'natural',
+                'cash_out',
+                1200,
+                'EUR'
+            )
+        );
+        $this->assertEquals(
+            3,
+            $commissioner->calculate(
+                '2015-01-01',
+                4,
+                'natural',
+                'cash_out',
+                1000,
+                'EUR'
+            )
+        );
+
+        $this->assertEquals(
+            0,
+            $commissioner->calculate(
+                '2016-01-05',
+                4,
+                'natural',
+                'cash_out',
+                1000,
+                'EUR'
+            )
+        );
+    }
+
+    public function testMaximumCommissions(): void
     {
         $commissioner = new Commissioner();
 
@@ -184,7 +198,7 @@ class CommissionerTest extends TestCase
                 5,
                 'natural',
                 'cash_in',
-                17000,
+                18000,
                 'USD'
             )
         );
@@ -211,6 +225,103 @@ class CommissionerTest extends TestCase
                 5,
                 'EUR'
             )
+        );
+    }
+
+    public function testFourthSmallTransactionWithinAWeekCommissionable(): void
+    {
+        $commissioner = new Commissioner();
+
+        $commissioner->calculate(
+            '2016-02-19', 1, 'natural', 'cash_out', 150, 'USD'
+        );
+
+        $commissioner->calculate(
+            '2016-02-19', 1, 'natural', 'cash_out', 150, 'USD'
+        );
+
+        $commissioner->calculate(
+            '2016-02-19', 1, 'natural', 'cash_out', 150, 'USD'
+        );
+
+        $this->assertEquals(
+            0.60,
+            $commissioner->calculate(
+                '2016-02-19',
+                1,
+                'natural',
+                'cash_out',
+                200,
+                'USD'
+            )
+        );
+    }
+
+    public function testFourthSmallTransactionNextWeekNonCommissionable(): void
+    {
+        $commissioner = new Commissioner();
+
+        $commissioner->calculate(
+            '2016-02-19', 1, 'natural', 'cash_out', 150, 'USD'
+        );
+
+        $commissioner->calculate(
+            '2016-02-19', 1, 'natural', 'cash_out', 150, 'USD'
+        );
+
+        $commissioner->calculate(
+            '2016-02-19', 1, 'natural', 'cash_out', 150, 'USD'
+        );
+
+        $this->assertEquals(
+            0.0,
+            $commissioner->calculate(
+                '2016-02-22',
+                1,
+                'natural',
+                'cash_out',
+                200,
+                'USD'
+            )
+        );
+    }
+
+    public function testInvalidInput(): void
+    {
+        $commissioner = new Commissioner();
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Amount cannot be zero or less');
+
+        $commissioner->calculate(
+            '2016-02-19',
+            1,
+            'legal',
+            'cash_in',
+            -500,
+            'EUR'
+        );
+
+        $this->expectExceptionMessage('Invalid operation type');
+
+        $commissioner->calculate(
+            '2016-02-19',
+            1,
+            'legal',
+            'cash_flow',
+            1,
+            'EUR'
+        );
+
+        $this->expectExceptionMessage('Invalid customer type');
+
+        $commissioner->calculate(
+            '2016-02-19',
+            1,
+            'illegal',
+            'cash_in',
+            1,
+            'EUR'
         );
     }
 }

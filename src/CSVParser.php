@@ -7,7 +7,7 @@ use League\Csv\Reader;
 /**
  * Class CSVParser
  */
-class CSVParser
+class CSVParser implements ParserInterface
 {
     /**
      * @var Commissioner
@@ -25,7 +25,7 @@ class CSVParser
     }
 
     /**
-     * @param  string $path
+     * @param string $path
      * @return array
      */
     public function parse(string $path): array
@@ -33,8 +33,8 @@ class CSVParser
         $reader = Reader::createFromPath(__DIR__ . '/' . $path, 'r');
         $transactions = $reader->getRecords();
         $allCommissions = [];
-        foreach ($transactions as $t) {
-            $allCommissions[] = $this->commissioner->calculate($t[0], $t[1], $t[2], $t[3], $t[4], $t[5]);
+        foreach ($transactions as $transactionData) {
+            $allCommissions[] = $this->commissioner->calculate(...$transactionData);
         }
 
         return $allCommissions;
