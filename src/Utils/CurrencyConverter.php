@@ -1,6 +1,6 @@
 <?php
 
-Namespace Acme\Utils;
+namespace Acme\Utils;
 
 /**
  * Class CurrencyConverter

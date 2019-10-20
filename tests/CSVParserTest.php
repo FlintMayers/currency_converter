@@ -11,7 +11,7 @@ class CSVParserTest extends TestCase
     public function testParseGivenData(): void
     {
         $parser = new CSVParser((new Commissioner()));
-        $commissions = $parser->parse('../transactions.csv');
+        $commissions = $parser->parse(__DIR__ . '/../transactions.csv');
         $this->assertIsArray($commissions);
         $expectedResult = [
             0.6,

@@ -30,7 +30,7 @@ class CSVParser implements ParserInterface
      */
     public function parse(string $path): array
     {
-        $reader = Reader::createFromPath(__DIR__ . '/' . $path, 'r');
+        $reader = Reader::createFromPath($path, 'r');
         $transactions = $reader->getRecords();
         $allCommissions = [];
         foreach ($transactions as $transactionData) {
