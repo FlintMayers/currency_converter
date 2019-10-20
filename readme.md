@@ -4,9 +4,9 @@
 
 `cd` into project directory
 
-`composer install`
+run `composer install`
 
-`php script.php pathToFile`
+run `php script.php pathToCSVfile`
 
 ##### Tests
 
